@@ -1,6 +1,7 @@
 import 'package:data_gov_ua_statistic/models/trade_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class GraphFrame extends StatelessWidget {
   const GraphFrame({super.key, required this.data});
@@ -18,7 +19,7 @@ class GraphFrame extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Text(
-                'Learned words per day',
+                'Export and import dynamics',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -30,9 +31,12 @@ class GraphFrame extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(right: 25, left: 2.5, bottom: 10),
-                child: _LineChart(
-                  data: data,
+                padding: EdgeInsets.only(right: 25, left: 2.5, bottom: 10, top: 10),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height -100,
+                  child: _LineChart(
+                    chartData: data,
+                  ),
                 ),
               ),
             ),
@@ -44,9 +48,9 @@ class GraphFrame extends StatelessWidget {
 }
 
 class _LineChart extends StatelessWidget {
-  const _LineChart({required this.data});
+  const _LineChart({required this.chartData});
 
-  final TradeData data;
+  final TradeData chartData;
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +58,15 @@ class _LineChart extends StatelessWidget {
   }
 
   LineChartData get lineChartData => LineChartData(
-        lineTouchData: lineTouchData(),
-        gridData: gridData(),
-        titlesData: titlesData(),
-        borderData: borderData(),
+         lineTouchData: lineTouchData(),
+        // gridData: gridData(),
+        // titlesData: titlesData(),
+        // borderData: borderData(),
         lineBarsData: lineBarsData(),
-        minX: 0,
-       // maxX: 6,
-        minY: 0,
-      //  maxY: 6,
+        // minX: 0,
+        // maxX: 6000000,
+        // minY: 0,
+        // maxY: 6000000,
       );
 
   LineTouchData lineTouchData() => const LineTouchData(
@@ -107,16 +111,7 @@ class _LineChart extends StatelessWidget {
       );
 
   SideTitleWidget bottomTitleWidgets(double value, TitleMeta meta) {
-    String text = switch (value.toInt()) {
-      0 => 'Mon',
-      1 => 'Tue',
-      2 => 'Wed',
-      3 => 'Thu',
-      4 => 'Fri',
-      5 => 'Sat',
-      6 => 'Sun',
-      _ => '',
-    };
+    String text = DateFormat('y MMMM').format(DateTime.fromMicrosecondsSinceEpoch(value.toInt()));
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -133,30 +128,30 @@ class _LineChart extends StatelessWidget {
   }
 
   SideTitles leftTitles() => SideTitles(
-        getTitlesWidget: leftTitleWidgets,
+        //    getTitlesWidget: leftTitleWidgets,
         interval: 1,
         reservedSize: 40,
         showTitles: true,
       );
 
-  Text leftTitleWidgets(double value, TitleMeta meta) {
-    String text = switch (value.toInt()) {
-      1 => '5',
-      2 => '10',
-      3 => '15',
-      4 => '20',
-      5 => '25',
-      6 => '30',
-      7 => '35',
-      _ => '',
-    };
+  // Text leftTitleWidgets(double value, TitleMeta meta) {
+  //   String text = switch (value.toInt()) {
+  //     1 => '5',
+  //     2 => '10',
+  //     3 => '15',
+  //     4 => '20',
+  //     5 => '25',
+  //     6 => '30',
+  //     7 => '35',
+  //     _ => '',
+  //   };
 
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
-    );
-  }
+  //   return Text(
+  //     text,
+  //     textAlign: TextAlign.center,
+  //     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
+  //   );
+  // }
 
   FlBorderData borderData() => FlBorderData(
         show: true,
@@ -184,14 +179,14 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: const FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(0, 1),
-          FlSpot(1, 0),
-          FlSpot(2, 2),
-          FlSpot(3, 2),
-          FlSpot(4, 3),
-          FlSpot(5, 1),
-          FlSpot(6, 0),
+        spots: [
+          ...chartData.records
+              .sublist(20)
+              .where((record) => record.attributes == Attribute.exports)
+              .toList()
+              .map<FlSpot>(
+                (e) => FlSpot(e.period.microsecondsSinceEpoch.toDouble(), double.parse(e.data)),
+              ),
         ],
       );
 
@@ -203,14 +198,14 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: const FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(0, 0),
-          FlSpot(1, 1),
-          FlSpot(2, 2),
-          FlSpot(3, 4),
-          FlSpot(4, 5),
-          FlSpot(5, 0),
-          FlSpot(6, 1),
+        spots: [
+          ...chartData.records
+              .sublist(20)
+              .where((record) => record.attributes == Attribute.imports)
+              .toList()
+              .map<FlSpot>(
+                (e) => FlSpot(e.period.microsecondsSinceEpoch.toDouble(), double.parse(e.data)),
+              ),
         ],
       );
 }

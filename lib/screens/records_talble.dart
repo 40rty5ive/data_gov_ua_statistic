@@ -22,7 +22,7 @@ class RecordsTalble extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              'Volume',
+              'Volume (million \$)',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],

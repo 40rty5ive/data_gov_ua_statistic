@@ -1,4 +1,5 @@
 import 'package:data_gov_ua_statistic/cubit/main_cybit_cubit.dart';
+import 'package:data_gov_ua_statistic/screens/difference_table.dart';
 import 'package:data_gov_ua_statistic/screens/graph_frame.dart';
 import 'package:data_gov_ua_statistic/screens/records_talble.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ? RecordsTalble(data: state.data)
                             : (_selectedIndex == 1)
                                 ? GraphFrame(data: state.data)
-                                : SizedBox(),
+                                : DifferenceTable(data: state.data),
                       ),
                     ),
                   ],

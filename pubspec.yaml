@@ -17,6 +17,7 @@ dependencies:
   freezed_annotation: ^2.4.4
   fl_chart: ^0.69.2
   intl: ^0.20.0
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:
