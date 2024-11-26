@@ -33,7 +33,7 @@ class GraphFrame extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(right: 25, left: 2.5, bottom: 10, top: 10),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height -100,
+                  height: MediaQuery.of(context).size.height - 100,
                   child: _LineChart(
                     chartData: data,
                   ),
@@ -58,7 +58,7 @@ class _LineChart extends StatelessWidget {
   }
 
   LineChartData get lineChartData => LineChartData(
-         lineTouchData: lineTouchData(),
+        lineTouchData: lineTouchData(),
         // gridData: gridData(),
         // titlesData: titlesData(),
         // borderData: borderData(),
@@ -180,13 +180,9 @@ class _LineChart extends StatelessWidget {
         dotData: const FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
         spots: [
-          ...chartData.records
-              .sublist(20)
-              .where((record) => record.attributes == Attribute.exports)
-              .toList()
-              .map<FlSpot>(
+          ...chartData.records.where((record) => record.attributes == Attribute.exports).toList().map<FlSpot>(
                 (e) => FlSpot(e.period.microsecondsSinceEpoch.toDouble(), double.parse(e.data)),
-              ),
+              ), 
         ],
       );
 
@@ -199,11 +195,7 @@ class _LineChart extends StatelessWidget {
         dotData: const FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
         spots: [
-          ...chartData.records
-              .sublist(20)
-              .where((record) => record.attributes == Attribute.imports)
-              .toList()
-              .map<FlSpot>(
+          ...chartData.records.where((record) => record.attributes == Attribute.imports).toList().map<FlSpot>(
                 (e) => FlSpot(e.period.microsecondsSinceEpoch.toDouble(), double.parse(e.data)),
               ),
         ],
