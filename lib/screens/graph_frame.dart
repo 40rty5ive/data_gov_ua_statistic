@@ -25,7 +25,7 @@ class GraphFrame extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(right: 25, left: 2.5, bottom: 10, top: 10),
+          padding: EdgeInsets.only(right: 25, left: 2.5, bottom: 10, top: 15),
           child: SizedBox(
             height: MediaQuery.of(context).size.height - 100,
             child: _LineChart(
@@ -73,8 +73,8 @@ class _LineChart extends StatelessWidget {
 
   LineChartData get lineChartData => LineChartData(
         lineTouchData: lineTouchData(),
-        // gridData: gridData(),
-         titlesData: titlesData(),
+        //gridData: gridData(),
+        titlesData: titlesData(),
         // borderData: borderData(),
         lineBarsData: lineBarsData(),
         // minX: 0,
@@ -112,60 +112,51 @@ class _LineChart extends StatelessWidget {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        // leftTitles: AxisTitles(
-        //   sideTitles: leftTitles(),
-        // ),
+        leftTitles: AxisTitles(
+          sideTitles: leftTitles(),
+        ),
       );
 
   SideTitles bottomTitles() => SideTitles(
         getTitlesWidget: bottomTitleWidgets,
-        interval: 1,
-        reservedSize: 32,
+        // interval: 10,
+        reservedSize: 120,
+
         showTitles: true,
       );
 
   SideTitleWidget bottomTitleWidgets(double value, TitleMeta meta) {
-    String text = DateFormat('y MMMM').format(DateTime.fromMicrosecondsSinceEpoch(value.toInt()));
+    String text = DateFormat('y MMMM').format(DateTime.fromMicrosecondsSinceEpoch(int.parse(value.round().toString())));
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 10,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: Colors.white,
-        ),
+      space: 45,
+      angle: 1.55,
+      child: Row(
+        children: [
+          Text(
+            text,
+          ),
+        ],
       ),
     );
   }
 
   SideTitles leftTitles() => SideTitles(
-        //    getTitlesWidget: leftTitleWidgets,
-        interval: 1,
-        reservedSize: 40,
+        getTitlesWidget: leftTitleWidgets,
+        //  interval: 1,
+        reservedSize: 69,
         showTitles: true,
       );
 
-  // Text leftTitleWidgets(double value, TitleMeta meta) {
-  //   String text = switch (value.toInt()) {
-  //     1 => '5',
-  //     2 => '10',
-  //     3 => '15',
-  //     4 => '20',
-  //     5 => '25',
-  //     6 => '30',
-  //     7 => '35',
-  //     _ => '',
-  //   };
+  Text leftTitleWidgets(double value, TitleMeta meta) {
+    String text = '${value / 100} B';
 
-  //   return Text(
-  //     text,
-  //     textAlign: TextAlign.center,
-  //     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
-  //   );
-  // }
+    return Text(
+      text,
+      textAlign: TextAlign.center,
+    );
+  }
 
   FlBorderData borderData() => FlBorderData(
         show: true,
