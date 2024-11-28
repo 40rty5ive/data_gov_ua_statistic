@@ -10,39 +10,53 @@ class GraphFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      child: AspectRatio(
-        aspectRatio: 1.25,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                'Export and import dynamics',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                ),
-                textAlign: TextAlign.center,
-              ),
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Text(
+            'Export and import dynamics',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
             ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(right: 25, left: 2.5, bottom: 10, top: 10),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height - 100,
-                  child: _LineChart(
-                    chartData: data,
-                  ),
-                ),
-              ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 25, left: 2.5, bottom: 10, top: 10),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height - 100,
+            child: _LineChart(
+              chartData: data,
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 40,
+              height: 20,
+              color: const Color(0xFF50E4FF),
+            ),
+            Text(
+              ' - Export',
+            ),
+            SizedBox(width: 40),
+            Container(
+              width: 40,
+              height: 20,
+              color: Colors.deepOrangeAccent.withOpacity(0.8),
+            ),
+            Text(
+              ' - Import',
             ),
           ],
         ),
-      ),
+        SizedBox(height: 40),
+      ],
     );
   }
 }
@@ -60,7 +74,7 @@ class _LineChart extends StatelessWidget {
   LineChartData get lineChartData => LineChartData(
         lineTouchData: lineTouchData(),
         // gridData: gridData(),
-        // titlesData: titlesData(),
+         titlesData: titlesData(),
         // borderData: borderData(),
         lineBarsData: lineBarsData(),
         // minX: 0,
@@ -98,9 +112,9 @@ class _LineChart extends StatelessWidget {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
-        ),
+        // leftTitles: AxisTitles(
+        //   sideTitles: leftTitles(),
+        // ),
       );
 
   SideTitles bottomTitles() => SideTitles(
@@ -167,11 +181,11 @@ class _LineChart extends StatelessWidget {
       );
 
   List<LineChartBarData> lineBarsData() => [
-        lineChartBarDataCurrentWeek(),
-        lineChartBarDataPreviousWeek(),
+        lineChartBarDataExport(),
+        lineChartBarDataImport(),
       ];
 
-  LineChartBarData lineChartBarDataCurrentWeek() => LineChartBarData(
+  LineChartBarData lineChartBarDataExport() => LineChartBarData(
         isCurved: true,
         curveSmoothness: 0,
         color: const Color(0xFF50E4FF),
@@ -182,11 +196,11 @@ class _LineChart extends StatelessWidget {
         spots: [
           ...chartData.records.where((record) => record.attributes == Attribute.exports).toList().map<FlSpot>(
                 (e) => FlSpot(e.period.microsecondsSinceEpoch.toDouble(), double.parse(e.data)),
-              ), 
+              ),
         ],
       );
 
-  LineChartBarData lineChartBarDataPreviousWeek() => LineChartBarData(
+  LineChartBarData lineChartBarDataImport() => LineChartBarData(
         isCurved: true,
         curveSmoothness: 0,
         color: Colors.deepOrangeAccent.withOpacity(0.8),
